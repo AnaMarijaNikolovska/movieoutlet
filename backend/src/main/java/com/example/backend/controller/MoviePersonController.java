@@ -4,7 +4,9 @@ import com.example.backend.model.MoviePerson;
 import com.example.backend.model.dto.MoviePersonDto;
 import com.example.backend.service.MoviePersonService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,12 +36,12 @@ public class MoviePersonController {
     }
 
     @PostMapping
-    public MoviePerson addActor(@RequestBody MoviePersonDto moviePersonDto){
+    public MoviePerson addActor(@RequestPart("moviePersonDto") MoviePersonDto moviePersonDto, @RequestPart("moviePersonPhoto")MultipartFile moviePersonPhoto)throws IOException {
         return moviePersonService.addActor(moviePersonDto);
     }
 
     @PutMapping("/{id}")
-    public MoviePerson editActor(@PathVariable Long id, @RequestBody MoviePersonDto moviePersonDto){
+    public MoviePerson editActor(@PathVariable Long id, @RequestPart("moviePersonDto") MoviePersonDto moviePersonDto, @RequestPart("moviePersonPhoto") MultipartFile moviePersonPhoto)throws IOException {
         return moviePersonService.editActor(moviePersonDto,id);
     }
 

@@ -4,7 +4,9 @@ import com.example.backend.model.Movie;
 import com.example.backend.model.dto.MovieDto;
 import com.example.backend.service.MovieService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -50,12 +52,12 @@ public class MovieController {
     }
 
     @PostMapping
-    public Movie addMovie(@RequestBody MovieDto movieDto){
+    public Movie addMovie(@RequestPart("movieDto") MovieDto movieDto, @RequestPart("moviePicture") MultipartFile moviePicture)throws IOException {
         return movieService.addMovie(movieDto);
     }
 
     @PutMapping("/{id}")
-    public Movie editMovie(@PathVariable Long id, @RequestBody MovieDto movieDto){
+    public Movie editMovie(@PathVariable Long id, @RequestPart("movieDto") MovieDto movieDto, @RequestPart("moviePicture") MultipartFile moviePicture)throws IOException {
         return movieService.editMovie(movieDto,id);
     }
 

@@ -4,7 +4,9 @@ import com.example.backend.model.Account;
 import com.example.backend.model.dto.AccountDto;
 import com.example.backend.service.AccountService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +31,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public Account addAccount(@RequestBody AccountDto accountDto){
+    public Account addAccount(@RequestPart("accountDto")AccountDto accountDto, @RequestPart("accountPicture") MultipartFile accountPicture)throws IOException {
         return accountService.addAccount(accountDto);
     }
 
@@ -39,7 +41,7 @@ public class AccountController {
     }
 
     @PutMapping("/{username}")
-    public Account editAccount(@PathVariable String username, @RequestBody AccountDto accountDto){
+    public Account editAccount(@PathVariable String username, @RequestPart("accountDto")AccountDto accountDto, @RequestPart("accountPicture") MultipartFile accountPicture)throws IOException {
         return accountService.editAccount(accountDto, username);
     }
 }
