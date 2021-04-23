@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -18,6 +19,9 @@ public class Comments {
 
     @ManyToOne
     Account account;
+
+    @ManyToOne
+    Movie movie;
 
     String text;
 }

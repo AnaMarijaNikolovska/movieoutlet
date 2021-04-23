@@ -1,18 +1,13 @@
 import React, {useState} from "react";
-import Jumbotron from "react-bootstrap/Jumbotron";
+import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {navigate} from "@reach/router";
-import {SaveCategory} from "../CategoryService";
 
-export default function AddCategory() {
-
-
+export default function EditCategory(props) {
     const [category, setCategory] = useState({
-        name: "",
-        description: ""
-    })
-
+        name: props.category.name ?? "",
+        description: props.category.description ?? "",
+    });
 
     const handleChange = name => event => {
         setCategory({...category, [name]: event.target.value});
@@ -20,14 +15,21 @@ export default function AddCategory() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        SaveCategory(category).then(r => navigate(`/category/${r.data.id}`))
+
     }
 
     return (
-        <>
-            <h1 className={"mb-3"}>Category</h1>
-            <Jumbotron>
-                <Form onSubmit={handleSubmit}>
+
+        <Modal {...props}
+               size="lg"
+               aria-labelledby="contained-modal-title-vcenter"
+               centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Edit Category</Modal.Title>
+            </Modal.Header>
+            <Form onSubmit={handleSubmit}>
+
+                <Modal.Body>
                     <Form.Group>
                         <Form.Label>Name</Form.Label>
                         <Form.Control placeholder="Enter name" value={category.name}
@@ -39,12 +41,13 @@ export default function AddCategory() {
                         <Form.Control as={"textarea"} rows={3} placeholder="Password" value={category.description}
                                       onChange={handleChange("description")}/>
                     </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={props.onHide}>Close</Button>
+                    <Button variant="primary" type={"submit"}>Save changes</Button>
+                </Modal.Footer>
+            </Form>
 
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </Form>
-            </Jumbotron>
-        </>
+        </Modal>
     )
 }

@@ -31,6 +31,9 @@ public class Movie {
     @ManyToMany
     Set<MoviePerson> moviePeople;
 
+    @OneToMany
+    Set<Comments> comments;
+
     @Lob
     byte[] picture;
 

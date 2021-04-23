@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/actors")
+@RequestMapping("/api/movieperson")
 public class MoviePersonController {
     private final MoviePersonService moviePersonService;
 

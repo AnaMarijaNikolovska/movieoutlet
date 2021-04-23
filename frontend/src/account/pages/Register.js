@@ -43,9 +43,9 @@ export default function Register() {
                 <Form onSubmit={handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" value={account.email}
-                                          onChange={handleChange("email")}/>
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control placeholder="Username" value={account.username}
+                                          onChange={handleChange("username")}/>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridPassword">
@@ -55,23 +55,24 @@ export default function Register() {
                         </Form.Group>
                     </Form.Row>
 
-                    <Form.Group>
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control placeholder="Enter Username" value={account.username}
-                                      onChange={handleChange("username")}/>
-                    </Form.Group>
+                    <Form.Row>
+                        <Form.Group as={Col}>
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control placeholder="Enter Name" value={account.name} onChange={handleChange("name")}/>
+                        </Form.Group>
+
+                        <Form.Group as={Col}>
+                            <Form.Label>Surname</Form.Label>
+                            <Form.Control placeholder="Enter Surname" value={account.surname}
+                                          onChange={handleChange("surname")}/>
+                        </Form.Group>
+                    </Form.Row>
 
                     <Form.Group>
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control placeholder="Enter Name" value={account.name} onChange={handleChange("name")}/>
+                        <Form.Label type="email" >Email</Form.Label>
+                        <Form.Control type="email" placeholder="name@example.com" value={account.email}
+                                      onChange={handleChange("email")}/>
                     </Form.Group>
-
-                    <Form.Group>
-                        <Form.Label>Surname</Form.Label>
-                        <Form.Control placeholder="Enter Surname" value={account.surname}
-                                      onChange={handleChange("surname")}/>
-                    </Form.Group>
-
 
                     <Form.Group>
                         <Form.File onChange={handleDrop}/>
