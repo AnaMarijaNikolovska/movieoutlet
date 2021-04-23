@@ -1,7 +1,8 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
+import {Link} from "@reach/router";
 
-export default function MovieCard(){
+export default function MovieCard(props) {
     return (
         <div className="image-flip">
             <div className="mainflip flip-0">
@@ -22,8 +23,7 @@ export default function MovieCard(){
                 <div className="backside">
                     <Card style={{minHeight: '260px', minWidth: "350px"}}>
                         <Card.Body className="text-center position-relative">
-                            <Card.Text className={"center-of-parent"}>{props.descripton}<Link
-                                to={`/cosmetics/${props.cosmeticId}`}>View More</Link></Card.Text>
+                            <Link to={`/cosmetics/${props.cosmeticId}`}>View More</Link>
                         </Card.Body>
                     </Card>
                 </div>

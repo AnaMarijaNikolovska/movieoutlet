@@ -2,8 +2,9 @@ import React, {useState} from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import {EditCategory} from "../CategoryService";
 
-export default function EditCategory(props) {
+export default function EditCategoryModal(props) {
     const [category, setCategory] = useState({
         name: props.category.name ?? "",
         description: props.category.description ?? "",
@@ -15,7 +16,7 @@ export default function EditCategory(props) {
 
     const handleSubmit = event => {
         event.preventDefault();
-
+        EditCategory(props.category.id, category).then(() => window.location.reload());
     }
 
     return (

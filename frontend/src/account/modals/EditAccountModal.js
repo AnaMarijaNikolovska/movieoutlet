@@ -1,17 +1,17 @@
 import React, {useState} from "react";
-import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
+import {EditAccount} from "../AccountService";
 
-export default function EditAccount(props){
+export default function EditAccountModal(props){
     const [account, setAccount] = useState({
         name: props.user.name ?? "",
         surname: props.user.surname ?? "",
         username: props.user.username ?? "",
         password: props.user.password ?? "",
-        email: props.user.email ?? ""
+        mail: props.user.mail ?? ""
     });
 
     const [accountPicture, setAccountPicture] = useState(null);
@@ -21,8 +21,17 @@ export default function EditAccount(props){
     };
 
     const handleSubmit = event => {
-        event.preventDefault();
+        event.preventDefault()
+        const formData = new FormData();
+        formData.append("accountDto", new Blob([JSON.stringify({...account})], {
+            type: "application/json"
+        }));
+        formData.append("accountPicture", accountPicture);
 
+        EditAccount(props.username, formData)
+            .then(r => {
+                props.onHide();
+            })
     }
 
     const handleDrop = event => {
@@ -45,8 +54,8 @@ export default function EditAccount(props){
                         <Form.Row>
                             <Form.Group as={Col}>
                                 <Form.Label>Email</Form.Label>
-                                <Form.Control type="email" placeholder="Enter email" value={account.email}
-                                              onChange={handleChange("email")}/>
+                                <Form.Control type="email" placeholder="Enter email" value={account.mail}
+                                              onChange={handleChange("mail")}/>
                             </Form.Group>
 
                             <Form.Group as={Col} controlId="formGridPassword">

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/movieperson")
+@RequestMapping("/api/movie-persons")
 public class MoviePersonController {
     private final MoviePersonService moviePersonService;
 
@@ -21,32 +21,32 @@ public class MoviePersonController {
     }
 
     @GetMapping()
-    public List<MoviePerson> findAllActors(){
+    public List<MoviePerson> findAllActors() {
         return moviePersonService.findAllActors();
     }
 
     @GetMapping("/{id}")
-    public Optional<MoviePerson> findOneActor(@PathVariable Long id){
+    public Optional<MoviePerson> findOneActor(@PathVariable Long id) {
         return moviePersonService.findOneActor(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteActor(@PathVariable Long id){
+    public void deleteActor(@PathVariable Long id) {
         moviePersonService.deleteActor(id);
     }
 
     @PostMapping
-    public MoviePerson addActor(@RequestPart("moviePersonDto") MoviePersonDto moviePersonDto, @RequestPart("moviePersonPhoto")MultipartFile moviePersonPhoto)throws IOException {
-        return moviePersonService.addActor(moviePersonDto);
+    public MoviePerson addActor(@RequestPart("moviePersonDto") MoviePersonDto moviePersonDto, @RequestPart(value = "moviePersonPhoto", required = false) MultipartFile moviePersonPhoto) throws IOException {
+        return moviePersonService.addActor(moviePersonDto, moviePersonPhoto);
     }
 
     @PutMapping("/{id}")
-    public MoviePerson editActor(@PathVariable Long id, @RequestPart("moviePersonDto") MoviePersonDto moviePersonDto, @RequestPart("moviePersonPhoto") MultipartFile moviePersonPhoto)throws IOException {
-        return moviePersonService.editActor(moviePersonDto,id);
+    public MoviePerson editActor(@PathVariable Long id, @RequestPart("moviePersonDto") MoviePersonDto moviePersonDto, @RequestPart(value = "moviePersonPhoto", required = false) MultipartFile moviePersonPhoto) throws IOException {
+        return moviePersonService.editActor(moviePersonDto, moviePersonPhoto, id);
     }
 
     @GetMapping("/search")
-    public Optional<MoviePerson> findActorByNameOrSurname(@RequestParam("Actor") String text){
+    public Optional<MoviePerson> findActorByNameOrSurname(@RequestParam("Actor") String text) {
         return moviePersonService.findByNameOrSurname(text);
     }
 }

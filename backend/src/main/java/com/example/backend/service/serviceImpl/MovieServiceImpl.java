@@ -10,7 +10,9 @@ import com.example.backend.service.MoviePersonService;
 import com.example.backend.service.MovieService;
 import com.sun.istack.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -36,17 +38,24 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Movie addMovie(MovieDto movieDto) {
+    public Movie addMovie(MovieDto movieDto, MultipartFile moviePicture) throws IOException {
 
         Movie newMovie = mapDtoToMovie(movieDto, null);
+        if (moviePicture != null) {
+            newMovie.setPicture(moviePicture.getBytes());
+        }
 
         return movieRepository.save(newMovie);
     }
 
     @Override
-    public Movie editMovie(MovieDto movieDto, Long id) {
+    public Movie editMovie(MovieDto movieDto, MultipartFile moviePicture, Long id) throws IOException {
 
         Movie movie = mapDtoToMovie(movieDto, id);
+        if (moviePicture != null) {
+            movie.setPicture(moviePicture.getBytes());
+        }
+
         return movieRepository.save(movie);
     }
 

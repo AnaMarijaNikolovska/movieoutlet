@@ -1,27 +1,24 @@
-import React, {useContext, useEffect, useState} from "react";
-import axios from "axios";
-import {navigate} from "@reach/router";
+import React, {useEffect, useState} from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import EditAccount from "../modals/EditAccount";
+import EditAccountModal from "../modals/EditAccountModal";
+import {DeleteAccount, GetOneAccount} from "../AccountService";
+import {navigate} from "@reach/router";
+import NoPhoto from "../../assets/user.jpg";
 
-export default function AccountDetails(props){
+export default function AccountDetails(props) {
 
     const [account, setAccount] = useState(null);
     const [showUpdateProfileModal, setShowUpdateProfileModal] = useState(false);
 
     useEffect(() => {
-        axios.get(`/account/${props.username}`).then(r => {
-            setAccount(r.data)
-        })
+        GetOneAccount(props.username)
+            .then(res => setAccount(res.data));
     }, [showUpdateProfileModal])
 
     const handleDelete = () => {
-        axios.delete(`/account/${account.username}`)
-            .then(res => {
-                navigate("/")
-                    .then(() => window.location.reload())
-            })
+        DeleteAccount(account.username)
+            .then(() => navigate('/'))
     }
 
     return (
@@ -31,8 +28,10 @@ export default function AccountDetails(props){
                 <Card.Body>
                     <div className={"row"}>
                         <div className={"col-md-5 right-border"}>
-                            <Card.Img>
-                            </Card.Img>
+                            <Card.Img src={account.picture
+                                ? ("data:image/png;base64," + account.picture)
+                                : NoPhoto}
+                                      alt="card image"/>
                             <h2>{account.name} {account.surname}</h2>
                         </div>
                         <div className={"col-md-7 card-details"}>
@@ -52,8 +51,8 @@ export default function AccountDetails(props){
 
                 </Card.Body>
                 {showUpdateProfileModal &&
-                <EditAccount username={account.username} user={account} show={showUpdateProfileModal}
-                          onHide={() => setShowUpdateProfileModal(false)}/>}
+                <EditAccountModal username={account.username} user={account} show={showUpdateProfileModal}
+                                  onHide={() => setShowUpdateProfileModal(false)}/>}
             </Card>}
         </div>
     )

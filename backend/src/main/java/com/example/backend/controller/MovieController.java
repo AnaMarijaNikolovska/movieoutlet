@@ -20,45 +20,48 @@ public class MovieController {
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
+
     @GetMapping
-    public List<Movie> findAllMovies(@RequestParam(required = false,name = "ReleasedDate") Date releasedDate){
-        if(releasedDate != null){
+    public List<Movie> findAllMovies(@RequestParam(required = false, name = "ReleasedDate") Date releasedDate) {
+        if (releasedDate != null) {
             return movieService.findAllByReleaseDate(releasedDate);
         }
         return movieService.findAllMovies();
     }
+
     @GetMapping("/{id}")
-    public Optional<Movie> findOneMovie(@PathVariable Long id){
+    public Optional<Movie> findOneMovie(@PathVariable Long id) {
         return movieService.findOneMovie(id);
     }
 
     @GetMapping("/category/{categoryId}")
-    public List<Movie> findAllMoviesByCategory(@PathVariable Long categoryId){
+    public List<Movie> findAllMoviesByCategory(@PathVariable Long categoryId) {
         return movieService.findAllByCategory(categoryId);
     }
+
     @GetMapping("/{name}")
-    public List<Movie> findAllByName(@PathVariable String name){
+    public List<Movie> findAllByName(@PathVariable String name) {
         return movieService.findAllByName(name);
     }
 
     @GetMapping("/actor/{actorId}")
-    public List<Movie> findAllMoviesByActor(@PathVariable Long actorId){
+    public List<Movie> findAllMoviesByActor(@PathVariable Long actorId) {
         return movieService.findAllByActor(actorId);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMovie(@PathVariable Long id){
+    public void deleteMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);
     }
 
     @PostMapping
-    public Movie addMovie(@RequestPart("movieDto") MovieDto movieDto, @RequestPart("moviePicture") MultipartFile moviePicture)throws IOException {
-        return movieService.addMovie(movieDto);
+    public Movie addMovie(@RequestPart("movieDto") MovieDto movieDto, @RequestPart(value = "moviePicture", required = false) MultipartFile moviePicture) throws IOException {
+        return movieService.addMovie(movieDto, moviePicture);
     }
 
     @PutMapping("/{id}")
-    public Movie editMovie(@PathVariable Long id, @RequestPart("movieDto") MovieDto movieDto, @RequestPart("moviePicture") MultipartFile moviePicture)throws IOException {
-        return movieService.editMovie(movieDto,id);
+    public Movie editMovie(@PathVariable Long id, @RequestPart("movieDto") MovieDto movieDto, @RequestPart(value = "moviePicture", required = false) MultipartFile moviePicture) throws IOException {
+        return movieService.editMovie(movieDto, moviePicture, id);
     }
 
 

@@ -20,7 +20,7 @@ export default function AddCategory() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        SaveCategory(category).then(r => navigate(`/category/${r.data.id}`))
+        SaveCategory(category).then(r => navigate(`/category/${r.data.id}`).then(() => window.location.reload()))
     }
 
     return (

@@ -15,7 +15,7 @@ import java.util.Set;
 public class MoviePerson {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     String name;

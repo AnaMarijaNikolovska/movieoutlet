@@ -6,7 +6,6 @@ import java.util.Date;
 
 @Data
 public class MovieDto {
-
     String name;
 
     Long[] categoriesId;
@@ -16,5 +15,4 @@ public class MovieDto {
     Date releaseDate;
 
     String description;
-
 }

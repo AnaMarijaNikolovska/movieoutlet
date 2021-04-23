@@ -6,11 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@EnableWebSecurity
 public class Security extends WebSecurityConfigurerAdapter {
     private final AccountService accountService;
 
@@ -34,8 +36,8 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .csrf().disable().cors().and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/user").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/user/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/accounts").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/accounts/sign-in").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

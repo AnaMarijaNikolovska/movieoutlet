@@ -1,9 +1,9 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import axios from "axios";
 import {navigate} from "@reach/router";
+import {AccountCredentials, LoginUser} from "../AccountService";
 
 export default function LogIn() {
 
@@ -11,11 +11,7 @@ export default function LogIn() {
     const [account, setAccount] = useState({
         username: "",
         password: ""
-    })
-
-    const BasicAuthToken = (username, password) => {
-        return 'Basic ' + window.btoa(username + ":" + password);
-    }
+    });
 
     const handleChange = name => event => {
         setAccount({...account, [name]: event.target.value});
@@ -24,12 +20,18 @@ export default function LogIn() {
     const handleSubmit = event => {
         event.preventDefault();
 
-    }
+        LoginUser(account)
+            .then(res => {
+                let credentials = AccountCredentials(res.data.username, res.data.password);
+                sessionStorage.setItem('accountCredentials', credentials);
+                navigate(`/account/${res.data.username}`).then(() => window.location.reload());
+            })
+    };
 
     return (
         <>
             <h1 className={"mb-3"}>Login</h1>
-            <Jumbotron >
+            <Jumbotron>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>
                         <Form.Label>Username</Form.Label>

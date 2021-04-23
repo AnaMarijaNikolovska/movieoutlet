@@ -1,10 +1,10 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import axios from "axios";
 import {navigate} from "@reach/router";
 import Col from "react-bootstrap/Col";
+import {AccountCredentials, AddAccount} from "../AccountService";
 
 export default function Register() {
 
@@ -13,7 +13,7 @@ export default function Register() {
         surname: "",
         username: "",
         password: "",
-        email: "",
+        mail: "",
     });
 
     const [accountPicture, setAccountPicture] = useState(null);
@@ -27,13 +27,20 @@ export default function Register() {
         setAccountPicture(file);
     }
 
-    const BasicAuthToken = (username, password) => {
-        return 'Basic ' + window.btoa(username + ":" + password);
-    }
-
     const handleSubmit = event => {
         event.preventDefault();
 
+        const formData = new FormData();
+        formData.append("accountDto", new Blob([JSON.stringify({...account})], {
+            type: "application/json"
+        }));
+        formData.append("accountPicture", accountPicture);
+        AddAccount(formData)
+            .then(res => {
+                let credentials = AccountCredentials(res.data.username, res.data.password);
+                sessionStorage.setItem('accountCredentials', credentials);
+                navigate(`/account/${res.data.username}`).then(() => window.location.reload());
+            })
     }
 
     return (
@@ -58,7 +65,8 @@ export default function Register() {
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Form.Label>Name</Form.Label>
-                            <Form.Control placeholder="Enter Name" value={account.name} onChange={handleChange("name")}/>
+                            <Form.Control placeholder="Enter Name" value={account.name}
+                                          onChange={handleChange("name")}/>
                         </Form.Group>
 
                         <Form.Group as={Col}>
@@ -69,9 +77,9 @@ export default function Register() {
                     </Form.Row>
 
                     <Form.Group>
-                        <Form.Label type="email" >Email</Form.Label>
-                        <Form.Control type="email" placeholder="name@example.com" value={account.email}
-                                      onChange={handleChange("email")}/>
+                        <Form.Label type="email">Email</Form.Label>
+                        <Form.Control type="email" placeholder="name@example.com" value={account.mail}
+                                      onChange={handleChange("mail")}/>
                     </Form.Group>
 
                     <Form.Group>
