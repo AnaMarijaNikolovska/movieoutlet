@@ -33,7 +33,7 @@ public class Account implements UserDetails {
     @Lob
     byte[] picture;
 
-    @OneToMany
+    @OneToMany(mappedBy = "account", orphanRemoval = true)
     Set<Comments> comments;
 
     @Override

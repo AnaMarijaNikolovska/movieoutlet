@@ -29,7 +29,6 @@ export default function EditCategoryModal(props) {
                 <Modal.Title>Edit Category</Modal.Title>
             </Modal.Header>
             <Form onSubmit={handleSubmit}>
-
                 <Modal.Body>
                     <Form.Group>
                         <Form.Label>Name</Form.Label>
@@ -48,7 +47,6 @@ export default function EditCategoryModal(props) {
                     <Button variant="primary" type={"submit"}>Save changes</Button>
                 </Modal.Footer>
             </Form>
-
         </Modal>
     )
 }

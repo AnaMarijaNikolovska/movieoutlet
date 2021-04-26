@@ -1,16 +1,26 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import {navigate} from "@reach/router";
-import {GetCategoryDetails} from "../CategoryService";
+import {DeleteCategory, GetCategoryDetails} from "../CategoryService";
 import EditCategoryModal from "../modals/EditCategoryModal";
+import {accountContext} from "../../components/accountContext";
+import {GetAllMoviesByCategory} from "../../movie/MovieService";
+import MovieCard from "../../components/MovieCard";
 
 export default function CategoryDetails(props) {
     const [category, setCategory] = useState(null);
+    const [movies, setMovies] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
+    const accountData = useContext(accountContext);
 
     useEffect(() => {
-        GetCategoryDetails(props.categoryId).then(r => setCategory(r.data))
+        GetCategoryDetails(props.categoryId).then(r => {
+            setCategory(r.data);
+
+            GetAllMoviesByCategory(r.data.id)
+                .then(res => setMovies(res.data));
+        })
     }, [showEditModal, props.categoryId])
 
 
@@ -24,23 +34,32 @@ export default function CategoryDetails(props) {
                         <p>{category.description}</p>
                     </div>
 
-                    <div className={"row"}>
-                        <hr style={{width: "80%"}}/>
-                    </div>
+                    {accountData.user && <>
+                        <div className={"row"}>
+                            <hr style={{width: "80%"}}/>
+                        </div>
 
-                    <>
                         <Button className={"mr-3"} onClick={() => setShowEditModal(true)}> Edit Category </Button>
-                        <Button variant={"success"}
+                        <Button variant={"success"} className={"mr-3"}
                                 onClick={() => navigate("/movies/add", {state: {categoryId: category.id}})}> Add
                             Movie </Button>
-                    </>
+                        <Button variant={"danger"}
+                                onClick={() => DeleteCategory(props.categoryId).then(() => navigate("/").then(() => window.location.reload()))}>Delete</Button>
+                    </>}
 
                     {showEditModal === true &&
                     <EditCategoryModal show={showEditModal} onHide={() => setShowEditModal(false)}
                                        category={category}/>}
                 </Card.Body>
-            </Card>
-            }
+                <Card.Body>
+                    <div className={"row"}>
+                        {movies && movies.length > 0 && movies.map(movie => <div className={"col-md-3"} key={movie.id}>
+                            <MovieCard movieId={movie.id} name={movie.name} description={movie.description}
+                                       picture={movie.picture}/>
+                        </div>)}
+                    </div>
+                </Card.Body>
+            </Card>}
         </div>
     )
 }

@@ -9,5 +9,6 @@ public class MoviePersonDto {
 
     String surname;
 
+    String personRole;
 //    Long[] moviesId;
 }

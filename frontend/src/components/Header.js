@@ -24,20 +24,22 @@ export default function Header() {
                 <Nav className="mr-auto">
                     <Link to={"/movies"} className={"nav-link"}>Movies</Link>
                     <NavDropdown title="Categories" id="collasible-nav-dropdown">
-                        <Link to={"/category/add"} className={"dropdown-item"}>Add Category</Link>
-                        <NavDropdown.Divider/>
+                        {accountData.user && <>
+                            <Link to={"/category/add"} className={"dropdown-item"}>Add Category</Link>
+                            <NavDropdown.Divider/>
+                        </>}
                         {categories && categories.length > 0 && categories.map(category =>
                             <Link key={category.id} className={"dropdown-item"}
                                   to={`/category/${category.id}`}>{category.name}
                             </Link>)}
                     </NavDropdown>
 
-                    <Link to={"/movieperson"} className={"nav-link"}>Actors</Link>
+                    <Link to={"/movie-crew"} className={"nav-link"}>Crew</Link>
 
                 </Nav>
                 <Nav>
                     {!accountData.user
-                        ? <> <Link to={"/login"} className={"nav-link"}>LogIn</Link>
+                        ? <> <Link to={"/login"} className={"nav-link"}>Log In</Link>
                             <Link to={"/register"} className={"nav-link"}>Register</Link>
                         </>
                         : <>

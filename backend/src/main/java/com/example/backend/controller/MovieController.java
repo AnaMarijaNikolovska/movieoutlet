@@ -22,8 +22,11 @@ public class MovieController {
     }
 
     @GetMapping
-    public List<Movie> findAllMovies(@RequestParam(required = false, name = "ReleasedDate") Date releasedDate) {
-        if (releasedDate != null) {
+    public List<Movie> findAllMovies(@RequestParam(required = false, name = "ReleasedDate") Date releasedDate, @RequestParam(required = false, name = "MovieName") String movieName) {
+        if (movieName != null) {
+            return movieService.findAllByName(movieName);
+        }
+        else if (releasedDate != null) {
             return movieService.findAllByReleaseDate(releasedDate);
         }
         return movieService.findAllMovies();
@@ -37,11 +40,6 @@ public class MovieController {
     @GetMapping("/category/{categoryId}")
     public List<Movie> findAllMoviesByCategory(@PathVariable Long categoryId) {
         return movieService.findAllByCategory(categoryId);
-    }
-
-    @GetMapping("/{name}")
-    public List<Movie> findAllByName(@PathVariable String name) {
-        return movieService.findAllByName(name);
     }
 
     @GetMapping("/actor/{actorId}")

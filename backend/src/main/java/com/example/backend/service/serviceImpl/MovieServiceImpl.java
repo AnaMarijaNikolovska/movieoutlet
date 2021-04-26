@@ -69,11 +69,13 @@ public class MovieServiceImpl implements MovieService {
 
         Optional<Category> category = categoryService.findOneCategory(categoryId);
 
-        if (category.isPresent()){
+        if (category.isPresent()) {
             Category category1 = category.get();
-//            return movieRepository.findAllByCategory(category1);
-            return null;
+            List<Category> categoryList = new ArrayList<>();
+            categoryList.add(category1);
+            return movieRepository.findAllByCategoriesIn(categoryList);
         }
+
         return null;
     }
 
@@ -90,10 +92,11 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> findAllByActor(Long actorId) {
         Optional<MoviePerson> actor = moviePersonService.findOneActor(actorId);
-        if (actor.isPresent()){
+        if (actor.isPresent()) {
             MoviePerson moviePerson1 = actor.get();
-//            return  movieRepository.findAllByActor(moviePerson1);
-            return null;
+            List<MoviePerson> moviePersonList = new ArrayList<>();
+            moviePersonList.add(moviePerson1);
+            return  movieRepository.findAllByMoviePeopleIn(moviePersonList);
         }
         return null;
     }

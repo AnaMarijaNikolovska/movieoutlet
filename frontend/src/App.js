@@ -14,6 +14,8 @@ import ListCategories from "./categories/pages/ListCategories";
 import AddMovie from "./movie/pages/AddMovie";
 import {LoginUser} from "./account/AccountService";
 import {accountContext} from "./components/accountContext";
+import MovieCrewList from "./movieCrew/MovieCrewList";
+import MovieCrewDetails from "./movieCrew/MovieCrewDetails";
 
 function App() {
     const [user, setUser] = useState(null);
@@ -21,8 +23,10 @@ function App() {
     const logoutUser = () => {
         setUser(null);
         sessionStorage.removeItem("accountCredentials");
-        alert("You have been logged out");
-        navigate("/");
+        navigate("/").then(() => {
+            alert("You have been logged out");
+            window.location.reload();
+        });
     }
 
     const contextData = {
@@ -46,8 +50,8 @@ function App() {
 
     return (
         <accountContext.Provider value={contextData}>
-            <div className="App">
-                <Header/>
+            <Header/>
+            <div className="container App mt-2 mb-2">
                 <Router>
                     <Home path={"/"}/>
                     <AccountDetails path={"/account/:username"}/>
@@ -59,6 +63,8 @@ function App() {
                     <ListMovies path={"/movies"}/>
                     <AddMovie path={"/movies/add"} exact/>
                     <MovieDetails path={"/movies/:movieId"}/>
+                    <MovieCrewList path={"/movie-crew"}/>
+                    <MovieCrewDetails path={"/movie-crew/:personId"}/>
                 </Router>
             </div>
         </accountContext.Provider>

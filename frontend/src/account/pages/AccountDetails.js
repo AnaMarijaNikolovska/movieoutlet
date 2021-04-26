@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import EditAccountModal from "../modals/EditAccountModal";
 import {DeleteAccount, GetOneAccount} from "../AccountService";
 import {navigate} from "@reach/router";
 import NoPhoto from "../../assets/user.jpg";
+import {accountContext} from "../../components/accountContext";
 
 export default function AccountDetails(props) {
-
     const [account, setAccount] = useState(null);
     const [showUpdateProfileModal, setShowUpdateProfileModal] = useState(false);
+    const authData = useContext(accountContext);
 
     useEffect(() => {
         GetOneAccount(props.username)
@@ -18,13 +19,15 @@ export default function AccountDetails(props) {
 
     const handleDelete = () => {
         DeleteAccount(account.username)
-            .then(() => navigate('/'))
+            .then(() => {
+                authData.logoutUser();
+            })
     }
 
     return (
         <div>
             {account && <Card>
-                <Card.Title className={"mt-3"}>User Details</Card.Title>
+                <h1 className={"mt-3"}>User Details</h1>
                 <Card.Body>
                     <div className={"row"}>
                         <div className={"col-md-5 right-border"}>
@@ -32,11 +35,11 @@ export default function AccountDetails(props) {
                                 ? ("data:image/png;base64," + account.picture)
                                 : NoPhoto}
                                       alt="card image"/>
-                            <h2>{account.name} {account.surname}</h2>
                         </div>
-                        <div className={"col-md-7 card-details"}>
+                        <div className={"col-md-7 card-details d-flex align-content-center justify-content-center flex-column"}>
+                            <h2>{account.name} {account.surname}</h2>
                             <p>Username: <b>{account.username}</b></p>
-                            <p>E-mail: <b>{account.email}</b></p>
+                            <p>E-mail: <b>{account.mail}</b></p>
 
                             <div className={"action-panel"}>
                                 <>

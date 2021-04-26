@@ -1,30 +1,49 @@
 import React, {useEffect, useState} from "react";
-import Jumbotron from "react-bootstrap/Jumbotron";
-import Form from "react-bootstrap/Form";
+import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
-import {GetAllCategories} from "../../categories/CategoryService";
-import {navigate} from "@reach/router";
+import Modal from "react-bootstrap/cjs/Modal";
+import {EditMovie} from "../MovieService";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-import {SaveMovie} from "../MovieService";
-import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
 import Col from "react-bootstrap/Col";
+import Calendar from "react-calendar";
+import {GetAllCategories} from "../../categories/CategoryService";
 import {GetAllMovieCrew} from "../../movieCrew/MovieCrewService";
-import MovieCrewModal from "../../movieCrew/modals/MovieCrewModal";
 
-export default function AddMovie(props) {
+export default function EditMovieModal(props) {
     const [movie, setMovie] = useState({
-        name: "",
+        name: props.movie?.name ?? "",
         categoriesId: [],
         actorsId: [],
-        releaseDate: new Date(),
-        description: "",
+        releaseDate: props.movie ? new Date(props.movie.releaseDate) : new Date(),
+        description: props.movie?.description ?? "",
     });
-    const [showAddCrewPerson, setShowAddCrewPerson] = useState(false);
+
+    const [moviePicture, setMoviePicture] = useState(null);
     const [movieCrew, setMovieCrew] = useState([]);
     const [categories, setCategories] = useState([]);
 
-    const [moviePicture, setMoviePicture] = useState(null);
+    const handleChange = name => event => {
+        setMovie({...movie, [name]: event.target.value});
+    };
+
+    const handleDateChange = date => {
+        setMovie({...movie, releaseDate: date});
+    }
+
+    const handleDrop = event => {
+        let file = event.target.files[0];
+        setMoviePicture(file);
+    }
+
+    const handleSubmit = event => {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append("movieDto", new Blob([JSON.stringify({...movie})], {
+            type: "application/json"
+        }));
+        formData.append("moviePicture", moviePicture);
+        EditMovie(props.movie.id, formData).then(() => props.onHide());
+    }
 
     useEffect(() => {
         GetAllCategories().then(r => {
@@ -52,35 +71,16 @@ export default function AddMovie(props) {
             });
             setMovieCrew(tempCrewArray);
         });
-    }, [showAddCrewPerson])
+    }, [])
 
-    const handleChange = name => event => {
-        setMovie({...movie, [name]: event.target.value});
-    };
-
-    const handleDateChange = date => {
-        setMovie({...movie, releaseDate: date});
-    }
-
-    const handleDrop = event => {
-        let file = event.target.files[0];
-        setMoviePicture(file);
-    }
-
-    const handleSubmit = event => {
-        event.preventDefault();
-        const formData = new FormData();
-        formData.append("movieDto", new Blob([JSON.stringify({...movie})], {
-            type: "application/json"
-        }));
-        formData.append("moviePicture", moviePicture);
-        SaveMovie(formData).then(r => navigate(`/movies/${r.data.id}`))
-    }
 
     return (
-        <div>
-            <h1 className={"mb-3"}>Movie</h1>
-            <Jumbotron>
+        <Modal {...props}
+               size="lg"
+               aria-labelledby="contained-modal-title-vcenter"
+               centered className={"text-center"}>
+            <Modal.Title>Edit Movie</Modal.Title>
+            <Modal.Body>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group>
                         <Form.Label>Name</Form.Label>
@@ -89,6 +89,7 @@ export default function AddMovie(props) {
                     </Form.Group>
 
                     <Form.Group>
+                        <Form.Label>Categories</Form.Label>
                         {categories && categories.length > 0 && <DropdownMultiselect
                             options={categories}
                             name="categories"
@@ -116,24 +117,17 @@ export default function AddMovie(props) {
                         </Form.Group>
                     </Form.Row>
 
-                    <Form.Row className={"text-left"}>
-                        <Form.Group as={Col} lg={10}>
-                            {movieCrew && movieCrew.length > 0 && <DropdownMultiselect
-                                options={movieCrew}
-                                name="crew"
-                                placeholder={"Movie Crew"}
-                                handleOnChange={(selected) => {
-                                    setMovie({...movie, actorsId: selected});
-                                }}
-                            />}
-                        </Form.Group>
-                        <Form.Group as={Col} lg={2}>
-                            <Button variant={"outline-success"} style={{"borderRadius": "30px"}}
-                                    onClick={() => setShowAddCrewPerson(true)}>
-                                +
-                            </Button>
-                        </Form.Group>
-                    </Form.Row>
+                    <Form.Group>
+                        <Form.Label>Movie Crew</Form.Label>
+                        {movieCrew && movieCrew.length > 0 && <DropdownMultiselect
+                            options={movieCrew}
+                            name="crew"
+                            placeholder={"Movie Crew"}
+                            handleOnChange={(selected) => {
+                                setMovie({...movie, actorsId: selected});
+                            }}
+                        />}
+                    </Form.Group>
 
                     <Form.Group>
                         <Form.File onChange={handleDrop}/>
@@ -143,9 +137,7 @@ export default function AddMovie(props) {
                         Submit
                     </Button>
                 </Form>
-                {showAddCrewPerson === true &&
-                <MovieCrewModal show={showAddCrewPerson} onHide={() => setShowAddCrewPerson(false)}/>}
-            </Jumbotron>
-        </div>
+            </Modal.Body>
+        </Modal>
     )
 }
